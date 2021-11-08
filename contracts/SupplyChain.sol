@@ -59,11 +59,9 @@ contract SupplyChain {
   }
 
   modifier checkValue(uint _sku) {
-    // refund them after payment for item
-    require(msg.value >= items[_sku].price);
-    _;
-    uint _price = items[_sku].price;
-    uint amountToRefund = msg.value - _price;
+    _; // refund them after payment for item
+    uint price = items[_sku].price;
+    uint amountToRefund = msg.value - price;
     items[_sku].buyer.transfer(amountToRefund);
   }
 
@@ -75,10 +73,22 @@ contract SupplyChain {
   // that an Item is for sale. Hint: What item properties will be non-zero when
   // an Item has been added?
 
-  // modifier forSale
-  // modifier sold(uint _sku)
-  // modifier shipped(uint _sku)
-  // modifier received(uint _sku)
+  modifier forSale(uint _sku) {
+    require(items[_sku].state == State.ForSale && items[_sku].price > 0);
+    _;
+  }
+  modifier sold(uint _sku) {
+    require(items[_sku].state == State.Sold);
+    _;
+  }
+  modifier shipped(uint _sku) {
+    require(items[_sku].state == State.Shipped);
+    _;
+  }
+  modifier received(uint _sku) {
+    require(items[_sku].state == State.Received);
+    _;
+  }
 
   constructor() {
     owner = msg.sender;
@@ -86,38 +96,35 @@ contract SupplyChain {
   }
 
   function addItem(string memory _name, uint _price) public returns (bool) {
-    // 1. Create a new item and put in array
-    // 2. Increment the skuCount by one
-    // 3. Emit the appropriate event
-    // 4. return true
+    // add item to items mapping
+    items[skuCount] = Item({
+      name: _name,
+      sku: skuCount,
+      price: _price,
+      state: State.ForSale,
+      seller: payable(msg.sender),
+      buyer: payable(address(0))
+    });
 
-    // hint:
-    // items[skuCount] = Item({
-    //  name: _name,
-    //  sku: skuCount,
-    //  price: _price,
-    //  state: State.ForSale,
-    //  seller: msg.sender,
-    //  buyer: address(0)
-    //});
-    //
-    //skuCount = skuCount + 1;
-    // emit LogForSale(skuCount);
-    // return true;
+    // increment skuCount & log event
+    skuCount += 1;
+    emit LogForSale(skuCount);
+
+    return true;
   }
 
-  // Implement this buyItem function.
-  // 1. it should be payable in order to receive refunds
-  // 2. this should transfer money to the seller,
-  // 3. set the buyer as the person who called this transaction,
-  // 4. set the state to Sold.
-  // 5. this function should use 3 modifiers to check
-  //    - if the item is for sale,
-  //    - if the buyer paid enough,
-  //    - check the value after the function is called to make
-  //      sure the buyer is refunded any excess ether sent.
-  // 6. call the event associated with this function!
-  function buyItem(uint sku) public {}
+  function buyItem(uint sku) public payable forSale(sku) paidEnough(msg.value) checkValue(sku) {
+    // transfer amount to seller
+    items[sku].seller.transfer(msg.value);
+
+    // set the buyer address
+    items[sku].buyer = payable(msg.sender);
+
+    // update item state
+    items[sku].state = State.Sold;
+
+    emit LogSold(sku);
+  }
 
   // 1. Add modifiers to check:
   //    - the item is sold already
