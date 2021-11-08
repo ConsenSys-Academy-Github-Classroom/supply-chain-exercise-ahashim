@@ -159,7 +159,7 @@ contract("SupplyChain", function (accounts) {
     });
   });
 
-  describe.only("Use cases", () => {
+  describe("Use cases", () => {
     it("should add an item with the provided name and price", async () => {
       await instance.addItem(name, price, { from: alice });
 

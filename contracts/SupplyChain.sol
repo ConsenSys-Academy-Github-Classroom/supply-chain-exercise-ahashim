@@ -96,6 +96,8 @@ contract SupplyChain {
   }
 
   function addItem(string memory _name, uint _price) public returns (bool) {
+    emit LogForSale(skuCount);
+
     // add item to items mapping
     items[skuCount] = Item({
       name: _name,
@@ -113,9 +115,9 @@ contract SupplyChain {
     return true;
   }
 
-  function buyItem(uint sku) public payable forSale(sku) paidEnough(msg.value) checkValue(sku) {
+  function buyItem(uint sku) public payable forSale(sku) paidEnough(items[sku].price) checkValue(sku) {
     // transfer amount to seller
-    items[sku].seller.transfer(msg.value);
+    items[sku].seller.transfer(items[sku].price);
 
     // set the buyer address
     items[sku].buyer = payable(msg.sender);
