@@ -132,12 +132,13 @@ contract SupplyChain {
     emit LogShipped(sku);
   }
 
-  // 1. Add modifiers to check
-  //    - the item is shipped already
-  //    - the person calling this function is the buyer.
   // 2. Change the state of the item to received.
   // 3. Call the event associated with this function!
-  function receiveItem(uint sku) public {}
+  function receiveItem(uint sku) public shipped(sku) verifyCaller(items[sku].buyer) {
+    items[sku].state = State.Received;
+
+    emit LogReceived(sku);
+  }
 
   // Uncomment the following code block. it is needed to run tests
   function fetchItem(uint _sku) public view
