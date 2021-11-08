@@ -11,7 +11,7 @@ Clone this repo to your local machine.
 
 Follow the comments outlined in SupplyChain.sol (in the contracts directory) to
 implement its functions. We have written a set of tests (in javascript) to
-determine if your implementation is correct. 
+determine if your implementation is correct.
 
 As an optional challenge, try writing some Solidity tests in TestSupplyChain.sol. This is not required, however!
 
@@ -20,7 +20,7 @@ project directory. There are **23 pending tests** that you must pass to complete
 this exercise.
 
 Similar to the Simple Bank Exercise, check out the test file to see the tests that define the behavior of the
-SupplyChain smart contract. 
+SupplyChain smart contract.
 
 Note: Truffle will default to use a Solidity 0.5.x compiler with this contract as-is. To use the latest 0.8.x compiler, please comment out lines 9-14 in [truffle-config.js.](truffle-config.js)
 
@@ -45,7 +45,7 @@ and `only` which runs only that test. But what if more than one test have the
 
     The contract will keep track of the
     [sku](https://en.wikipedia.org/wiki/Stock_keeping_unit)s in our supply
-    chain. Each item for sale will have a unique sku number. 
+    chain. Each item for sale will have a unique sku number.
 
     **hint**: define a public variable called `skuCounter` of type uint
 
@@ -82,7 +82,7 @@ struct` tests and proceed.
 
   - [ ] should add an item with the provided name and price
     <details><summary>:book:</summary>
-    use case: As a seller, I want to add an item for sale. I should 
+    use case: As a seller, I want to add an item for sale. I should
     </details>
   - [ ] should emit a LogForSale event when an item is added
     <details><summary>:book:</summary>
