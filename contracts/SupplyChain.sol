@@ -126,12 +126,11 @@ contract SupplyChain {
     emit LogSold(sku);
   }
 
-  // 1. Add modifiers to check:
-  //    - the item is sold already
-  //    - the person calling this function is the seller.
-  // 2. Change the state of the item to shipped.
-  // 3. call the event associated with this function!
-  function shipItem(uint sku) public {}
+  function shipItem(uint sku) public sold(sku) verifyCaller(items[sku].seller) {
+    items[sku].state = State.Shipped;
+
+    emit LogShipped(sku);
+  }
 
   // 1. Add modifiers to check
   //    - the item is shipped already
